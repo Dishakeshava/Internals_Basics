@@ -1,0 +1,7 @@
+{
+    "registered_model_name": "biomotion-injury-risk-score-predictor",
+    "version": 2,
+    "run_id": "2f35113b74fd4007a22bc55e326e8f49",
+    "source_metric": "rmse",
+    "source_metric_value": 0.0
+}
