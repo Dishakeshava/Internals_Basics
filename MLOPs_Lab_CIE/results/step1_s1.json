@@ -1,0 +1,22 @@
+{
+    "experiment_name": "biomotion-injury-risk-score",
+    "models": [
+        {
+            "name": "Lasso",
+            "mae": 6.23092703046062,
+            "rmse": 8.83045336229848,
+            "r2": 0.3827621523444561,
+            "mape": 19.310568960753045
+        },
+        {
+            "name": "RandomForest",
+            "mae": 6.845120000000004,
+            "rmse": 8.365994742766695,
+            "r2": 0.44598474860182724,
+            "mape": 21.270401927800926
+        }
+    ],
+    "best_model": "RandomForest",
+    "best_metric_name": "rmse",
+    "best_metric_value": 8.365994742766695
+}
