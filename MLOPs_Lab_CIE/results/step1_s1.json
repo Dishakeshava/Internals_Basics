@@ -3,20 +3,21 @@
     "models": [
         {
             "name": "Lasso",
-            "mae": 6.23092703046062,
-            "rmse": 8.83045336229848,
-            "r2": 0.3827621523444561,
-            "mape": 19.310568960753045
+            "mae": 6.2309,
+            "rmse": 8.8305,
+            "r2": 0.3828,
+            "mape": 19.3106
         },
         {
             "name": "RandomForest",
-            "mae": 6.845120000000004,
-            "rmse": 8.365994742766695,
-            "r2": 0.44598474860182724,
-            "mape": 21.270401927800926
+            "mae": 6.8451,
+            "rmse": 8.366,
+            "r2": 0.446,
+            "mape": 21.2704
         }
     ],
     "best_model": "RandomForest",
+    "best_model_run_id": "7d352869cebe4a49b02be20a2f9c7bb3",
     "best_metric_name": "rmse",
-    "best_metric_value": 8.365994742766695
+    "best_metric_value": 8.366
 }

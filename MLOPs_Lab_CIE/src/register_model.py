@@ -1,63 +1,55 @@
 import mlflow
 import mlflow.sklearn
-import pandas as pd
 import json
 import os
 
-from sklearn.ensemble import RandomForestRegressor
-
 # ---------------- CONFIG ----------------
 MODEL_NAME = "biomotion-injury-risk-score-predictor"
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-data_path = os.path.join(BASE_DIR, "data", "training_data.csv")
+STEP1_RESULT = os.path.join(BASE_DIR, "results", "step1_s1.json")
 RESULT_PATH = os.path.join(BASE_DIR, "results", "step3_s6.json")
 
-# ---------------- LOAD DATA ----------------
-data = pd.read_csv(data_path)
-
-X = data.drop("injury_risk_score", axis=1)
-y = data["injury_risk_score"]
-
-# ---------------- TRAIN MODEL ----------------
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X, y)
-
-# ---------------- MLflow ----------------
-mlflow.set_experiment("biomotion-injury-risk-score")
-
-with mlflow.start_run(run_name="Final-Registry-Run") as run:
-
-    # 🔥 IMPORTANT: log under "model"
-    mlflow.sklearn.log_model(model, artifact_path="model")
-
-    run_id = run.info.run_id
-    print("Run ID:", run_id)
-
-    # ---------------- REGISTER MODEL ----------------
-    model_uri = f"runs:/{run_id}/model"
-
-    registered_model = mlflow.register_model(
-        model_uri=model_uri,
-        name=MODEL_NAME
+# ---------------- READ TASK 1 RESULTS ----------------  ← FIX: use Task 1 run, not a new one
+if not os.path.exists(STEP1_RESULT):
+    raise FileNotFoundError(
+        f"step1_s1.json not found at {STEP1_RESULT}. Run train.py first."
     )
 
-    version = registered_model.version
+with open(STEP1_RESULT, "r") as f:
+    step1 = json.load(f)
+
+best_run_id = step1["best_model_run_id"]         # ← the winning run from Task 1
+best_metric_value = step1["best_metric_value"]   # ← real RMSE, not 0.0
+
+print(f"Linking to Task 1 best run: {best_run_id}")
+print(f"Best RMSE from Task 1: {best_metric_value}")
+
+# ---------------- MLflow: register the Task 1 model ----------------  ← FIX: no retraining
+mlflow.set_experiment("biomotion-injury-risk-score")
+
+model_uri = f"runs:/{best_run_id}/model"
+
+registered_model = mlflow.register_model(
+    model_uri=model_uri,
+    name=MODEL_NAME
+)
+
+version = registered_model.version
+print(f"Registered as version: {version}")
 
 # ---------------- SAVE JSON ----------------
 output = {
     "registered_model_name": MODEL_NAME,
-    "version": version,
-    "run_id": run_id,
+    "version": int(version),
+    "run_id": best_run_id,
     "source_metric": "rmse",
-    "source_metric_value": 0.0
+    "source_metric_value": round(best_metric_value, 4)   # ← FIX: real value
 }
 
 os.makedirs(os.path.join(BASE_DIR, "results"), exist_ok=True)
-
 with open(RESULT_PATH, "w") as f:
     json.dump(output, f, indent=4)
 
-print("\n✅ Task 3 completed")
+print("\nTask 3 completed")
 print("Version:", version)
 print("Saved at:", RESULT_PATH)

@@ -2,9 +2,9 @@
     "original_data_rows": 25,
     "new_data_rows": 20,
     "combined_data_rows": 45,
-    "champion_mae": 6.845120000000004,
-    "retrained_mae": 2.6533200000000163,
-    "improvement": 4.191799999999988,
+    "champion_mae": 6.8451,
+    "retrained_mae": 2.6533,
+    "improvement": 4.1918,
     "min_improvement_threshold": 0.5,
     "action": "promoted",
     "comparison_metric": "mae"
